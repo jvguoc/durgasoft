@@ -25,12 +25,13 @@ public class Controlador {
         vista.mostrarMensaje("Excursión " + excursion.getNombre() + " registrada con éxito.");
     }
 
-    public void modificarSocio(int id, String nuevoNombre, String nuevaLocalidad, String nuevoTelefono) {
+    public void modificarSocio(int id, String nuevoNombre, String nuevaLocalidad, String nuevoTelefono) throws SocioNoEncontradoException {
         Socio socio = buscarSocioPorId(id);
-        if (socio != null) {
-            socio.modificar(nuevoNombre, nuevaLocalidad, nuevoTelefono);
-            vista.mostrarMensaje("Socio modificado con éxito.");
+        if (socio == null) {
+            throw new SocioNoEncontradoException("No se encontró el socio con ID: " + id);
         }
+        socio.modificar(nuevoNombre, nuevaLocalidad, nuevoTelefono);
+        vista.mostrarMensaje("Socio modificado con éxito.");
     }
 
     public void eliminarSocio(int id) {
@@ -85,21 +86,27 @@ public class Controlador {
     }
 
 
-    public void inscribirSocio(int idSocio, int idExcursion) {
+    public void inscribirSocio(int idSocio, int idExcursion)
+            throws SocioNoEncontradoException, ExcursionNoEncontradaException, PlazasInsuficientesException, InscripcionDuplicadaException {
         Socio socio = buscarSocioPorId(idSocio);
-        Excursion excursion = buscarExcursionPorId(idExcursion);
+        if (socio == null) throw new SocioNoEncontradoException("No se encontró un socio con ID " + idSocio);
 
-        if (socio != null && excursion != null) {
-            if (excursion.getPlazasDisponibles() > 0) {
-                Inscripcion inscripcion = new Inscripcion(socio, excursion, new Date());
-                listaInscripciones.add(inscripcion);
-                inscripcion.inscribir();
-            } else {
-                vista.mostrarMensaje("No hay plazas disponibles en esta excursión.");
-            }
-        } else {
-            vista.mostrarMensaje("Socio o excursión no encontrados.");
+        Excursion excursion = buscarExcursionPorId(idExcursion);
+        if (excursion == null) throw new ExcursionNoEncontradaException("No se encontró una excursión con ID " + idExcursion);
+
+        if (excursion.getPlazasDisponibles() <= 0) {
+            throw new PlazasInsuficientesException("No hay plazas disponibles en la excursión: " + excursion.getNombre());
         }
+
+        for (Inscripcion ins : listaInscripciones) {
+            if (ins.getSocio().getIdSocio() == idSocio && ins.getExcursion().getIdExcursion() == idExcursion) {
+                throw new InscripcionDuplicadaException("El socio ya está inscrito en esta excursión.");
+            }
+        }
+
+        Inscripcion inscripcion = new Inscripcion(socio, excursion, new Date());
+        listaInscripciones.add(inscripcion);
+        inscripcion.inscribir();
     }
 
     public void eliminarInscripcion(int idSocio, int idExcursion) {

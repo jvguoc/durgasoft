@@ -2,6 +2,12 @@ import controlador.Controlador;
 import modelo.*;
 import vista.VistaConsola;
 
+import controlador.Controlador;
+import controlador.SocioNoEncontradoException;
+import controlador.ExcursionNoEncontradaException;
+import controlador.PlazasInsuficientesException;
+import controlador.InscripcionDuplicadaException;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -82,7 +88,12 @@ public class Main {
                     String nuevoNombre = vista.leerEntrada("Introduce el nuevo nombre del socio: ");
                     String nuevaLocalidad = vista.leerEntrada("Introduce la nueva localidad del socio: ");
                     String nuevoTelefono = vista.leerEntrada("Introduce el nuevo teléfono del socio: ");
-                    controlador.modificarSocio(idSocioModificar, nuevoNombre, nuevaLocalidad, nuevoTelefono);
+
+                    try {
+                        controlador.modificarSocio(idSocioModificar, nuevoNombre, nuevaLocalidad, nuevoTelefono);
+                    } catch (SocioNoEncontradoException e) {
+                        vista.mostrarMensaje("Error: " + e.getMessage());
+                    }
                     break;
 
                 case "6":
@@ -95,7 +106,11 @@ public class Main {
                     // 7. Inscribir Socio en Excursión
                     int idSocioInscribir = Integer.parseInt(vista.leerEntrada("Introduce el ID del socio: "));
                     int idExcursionInscribir = Integer.parseInt(vista.leerEntrada("Introduce el ID de la excursión: "));
-                    controlador.inscribirSocio(idSocioInscribir, idExcursionInscribir);
+                    try {
+                        controlador.inscribirSocio(idSocioInscribir, idExcursionInscribir);
+                    } catch (SocioNoEncontradoException | ExcursionNoEncontradaException | PlazasInsuficientesException | InscripcionDuplicadaException e) {
+                        vista.mostrarMensaje("Error: " + e.getMessage());
+                    }
                     break;
 
                 case "8":
@@ -104,7 +119,6 @@ public class Main {
                     int idExcursionEliminar = Integer.parseInt(vista.leerEntrada("Introduce el ID de la excursión: "));
                     controlador.eliminarInscripcion(idSocioEchar, idExcursionEliminar);
                     break;
-
 
                 case "9":
                     // 9. Salir
