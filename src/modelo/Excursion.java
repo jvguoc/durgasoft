@@ -2,6 +2,8 @@ package modelo;
 
 import java.text.SimpleDateFormat; // Temporal hasta encontrar la mejor forma de handlear la fecha
 import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Excursion {
     private final int idExcursion; // TODO: Revisar si por lógica debería ser final o interesa cambiar la id en algún punto
@@ -10,6 +12,7 @@ public class Excursion {
     private Date fecha;
     private String lugar;
     private int plazasDisponibles;
+    private List<Integer> sociosInscritos = new ArrayList<>(); // Lista de socios inscritos
 
     public Excursion(int idExcursion, String nombre, Date fecha, String lugar, int plazasDisponibles) {
         this.idExcursion = contadorId++;
@@ -64,5 +67,9 @@ public class Excursion {
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
         return formato.format(fecha);
     }
-}
 
+    // Nuevo método para obtener la lista de socios inscritos
+    public List<Integer> getSociosInscritos() {
+        return sociosInscritos;
+    }
+}

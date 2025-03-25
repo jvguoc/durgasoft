@@ -2,7 +2,6 @@ import controlador.Controlador;
 import modelo.*;
 import vista.VistaConsola;
 
-import controlador.Controlador;
 import controlador.SocioNoEncontradoException;
 import controlador.ExcursionNoEncontradaException;
 import controlador.PlazasInsuficientesException;
@@ -99,8 +98,13 @@ public class Main {
                 case "6":
                     // 6. Eliminar Socio
                     int idSocioEliminar = Integer.parseInt(vista.leerEntrada("Introduce el ID del socio a eliminar: "));
-                    controlador.eliminarSocio(idSocioEliminar);
+                    try {
+                        controlador.eliminarSocio(idSocioEliminar);  // Puede lanzar SocioNoEncontradoException
+                    } catch (SocioNoEncontradoException e) {
+                        vista.mostrarMensaje(e.getMessage());  // Muestra el mensaje de la excepción
+                    }
                     break;
+
 
                 case "7":
                     // 7. Inscribir Socio en Excursión

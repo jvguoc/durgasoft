@@ -7,6 +7,7 @@ public class Socio {
     private String localidad;
     private String telefono;
 
+
     public Socio(int idSocio, String nombre, String localidad, String telefono) {
         this.idSocio = contadorId++;
         this.nombre = nombre;
@@ -41,4 +42,8 @@ public class Socio {
     public String getNombre() {
         return nombre;
     }
+
+    public String getLocalidad() { return localidad; }
+    public String getTelefono() { return telefono; }
+
 }
