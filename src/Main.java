@@ -3,8 +3,11 @@ import vista.VistaConsola;
 
 public class Main {
     public static void main(String[] args) {
-        ControladorPrincipal controlador = new ControladorPrincipal();
-        VistaConsola vista = new VistaConsola();
-        vista.iniciarMenu(controlador);
+        try {
+            ControladorPrincipal ctrl = new ControladorPrincipal();
+            new VistaConsola().iniciarMenu(ctrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

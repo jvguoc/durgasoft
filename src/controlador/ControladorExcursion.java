@@ -1,27 +1,34 @@
 package controlador;
 
+import dao.ExcursionDAO;
 import modelo.Excursion;
-
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 
 public class ControladorExcursion {
-    private List<Excursion> listaExcursiones = new ArrayList<>();
+    private ExcursionDAO excursionDAO;
 
-    public void registrarExcursion(Excursion excursion) {
-        listaExcursiones.add(excursion);
+    public ControladorExcursion() throws SQLException {
+        this.excursionDAO = dao.DAOFactory.createExcursionDAO();
     }
 
-    public List<Excursion> obtenerExcursiones() {
-        return listaExcursiones;
+    public void registrarExcursion(Excursion excursion) throws SQLException {
+        excursionDAO.crear(excursion);
     }
 
-    public Excursion buscarExcursionPorId(int id) {
-        for (Excursion excursion : listaExcursiones) {
-            if (excursion.getIdExcursion() == id) {
-                return excursion;
-            }
-        }
-        return null;
+    public List<Excursion> obtenerExcursiones() throws SQLException {
+        return excursionDAO.obtenerTodos();
+    }
+
+    public Excursion buscarExcursionPorId(int id) throws SQLException {
+        return excursionDAO.obtenerPorId(id);
+    }
+
+    public void actualizarExcursion(Excursion excursion) throws SQLException {
+        excursionDAO.actualizar(excursion);
+    }
+
+    public void eliminarExcursion(int id) throws SQLException {
+        excursionDAO.eliminar(id);
     }
 }

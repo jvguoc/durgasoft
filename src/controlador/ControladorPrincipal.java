@@ -1,25 +1,21 @@
 package controlador;
 
+import dao.Conexion;
+import java.sql.Connection;
+
 public class ControladorPrincipal {
-    private ControladorSocio controladorSocio;
-    private ControladorExcursion controladorExcursion;
-    private ControladorInscripcion controladorInscripcion;
+    private ControladorSocio cs;
+    private ControladorExcursion ce;
+    private ControladorInscripcion ci;
 
-    public ControladorPrincipal() {
-        this.controladorSocio = new ControladorSocio();
-        this.controladorExcursion = new ControladorExcursion();
-        this.controladorInscripcion = new ControladorInscripcion(controladorSocio, controladorExcursion);
+    public ControladorPrincipal() throws Exception {
+        Connection conn = Conexion.getConnection();
+        this.cs = new ControladorSocio();
+        this.ce = new ControladorExcursion();
+        this.ci = new ControladorInscripcion(cs, ce, conn);
     }
 
-    public ControladorSocio getControladorSocio() {
-        return controladorSocio;
-    }
-
-    public ControladorExcursion getControladorExcursion() {
-        return controladorExcursion;
-    }
-
-    public ControladorInscripcion getControladorInscripcion() {
-        return controladorInscripcion;
-    }
+    public ControladorSocio getControladorSocio() { return cs; }
+    public ControladorExcursion getControladorExcursion() { return ce; }
+    public ControladorInscripcion getControladorInscripcion() { return ci; }
 }

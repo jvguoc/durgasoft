@@ -1,47 +1,34 @@
 package controlador;
 
+import dao.SocioDAO;
 import modelo.Socio;
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 
 public class ControladorSocio {
-    private List<Socio> listaSocios = new ArrayList<>();
+    private SocioDAO socioDAO;
 
-    public void registrarSocio(Socio socio) {
-        listaSocios.add(socio);
+    public ControladorSocio() throws SQLException {
+        this.socioDAO = dao.DAOFactory.createSocioDAO();
     }
 
-    public void modificarSocio(int id, String nuevoNombre, String nuevaLocalidad, String nuevoTelefono) throws SocioNoEncontradoException {
-        Socio socio = buscarSocioPorId(id);
-        if (socio == null) {
-            throw new SocioNoEncontradoException("No se encontró el socio con ID: " + id);
-        }
-
-        socio.setNombre(nuevoNombre);
-        socio.setLocalidad(nuevaLocalidad);
-        socio.setTelefono(nuevoTelefono);
-        System.out.println("Datos del socio con ID " + id + " han sido actualizados.");
+    public void registrarSocio(Socio socio) throws SQLException {
+        socioDAO.crear(socio);
     }
 
-    public void eliminarSocio(int id) throws SocioNoEncontradoException {
-        Socio socio = buscarSocioPorId(id);
-        if (socio == null) {
-            throw new SocioNoEncontradoException("No se encontró el socio con ID: " + id);
-        }
-        listaSocios.remove(socio);
-        System.out.println("Socio con ID " + id + " ha sido eliminado.");
+    public List<Socio> obtenerSocios() throws SQLException {
+        return socioDAO.obtenerTodos();
     }
 
-    public List<Socio> obtenerSocios() {
-        return listaSocios;
+    public Socio buscarSocioPorId(int id) throws SQLException {
+        return socioDAO.obtenerPorId(id);
     }
 
-    public Socio buscarSocioPorId(int id) {
-        for (Socio socio : listaSocios) {
-            if (socio.getIdSocio() == id) {
-                return socio;
-            }
-        }
-        return null;
+    public void modificarSocio(Socio socio) throws SQLException {
+        socioDAO.actualizar(socio);
+    }
+
+    public void eliminarSocio(int id) throws SQLException {
+        socioDAO.eliminar(id);
     }
 }

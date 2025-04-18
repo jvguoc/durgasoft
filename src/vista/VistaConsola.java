@@ -1,92 +1,47 @@
 package vista;
 
 import controlador.ControladorPrincipal;
-import java.util.Date;
-import java.util.Scanner;
 import modelo.Socio;
 import modelo.Excursion;
-import controlador.*;
+import java.util.Date;
+import java.util.Scanner;
 
 public class VistaConsola {
+    private Scanner scanner = new Scanner(System.in);
 
-    private Scanner scanner;
-
-    public VistaConsola() {
-        scanner = new Scanner(System.in);
-    }
-
-    public String leerEntrada(String mensaje) {
-        System.out.print(mensaje);
-        return scanner.nextLine();
-    }
-
-    public void mostrarMensaje(String mensaje) {
-        System.out.println(mensaje);
-    }
-
-    public void iniciarMenu(ControladorPrincipal controlador) {
-        boolean continuar = true;
-        while (continuar) {
-            System.out.println("\n--- Menú Principal ---");
-            System.out.println("1. Registrar Socio");
-            System.out.println("2. Registrar Excursión");
-            System.out.println("3. Inscribir Socio en Excursión");
-            System.out.println("4. Consultar Socios");
-            System.out.println("5. Salir");
-            String opcion = leerEntrada("Seleccione una opción: ");
-
-            switch (opcion) {
+    public void iniciarMenu(ControladorPrincipal ctrl) throws Exception {
+        boolean salir = false;
+        while (!salir) {
+            System.out.println("1. Registrar Socio\n2. Registrar Excursión\n3. Inscribir Socio\n4. Listar Socios\n5. Salir");
+            String op = scanner.nextLine();
+            switch (op) {
                 case "1":
-                    // Registrar socio
-                    String nombreSocio = leerEntrada("Ingrese el nombre del socio: ");
-                    String localidadSocio = leerEntrada("Ingrese la localidad del socio: ");
-                    String telefonoSocio = leerEntrada("Ingrese el teléfono del socio: ");
-                    controlador.getControladorSocio().registrarSocio(new Socio(nombreSocio, localidadSocio, telefonoSocio));
-                    mostrarMensaje("Socio registrado exitosamente.");
+                    System.out.print("Nombre: "); String nom = scanner.nextLine();
+                    System.out.print("Localidad: "); String loc = scanner.nextLine();
+                    System.out.print("Teléfono: "); String tel = scanner.nextLine();
+                    ctrl.getControladorSocio().registrarSocio(new Socio(nom, loc, tel));
+                    System.out.println("Socio registrado.");
                     break;
                 case "2":
-                    // Registrar excursión
-                    String nombreExcursion = leerEntrada("Ingrese el nombre de la excursión: ");
-                    String lugarExcursion = leerEntrada("Ingrese el lugar de la excursión: ");
-                    Date fechaExcursion = new Date();  // O usar un método de entrada más detallado para la fecha
-                    int idExcursion = Integer.parseInt(leerEntrada("Ingrese el ID de la excursión: "));
-                    int plazasDisponibles = Integer.parseInt(leerEntrada("Ingrese las plazas disponibles: "));
-
-                    // Ahora creamos la excursión con todos los parámetros
-                    controlador.getControladorExcursion().registrarExcursion(new Excursion(idExcursion, nombreExcursion, fechaExcursion, lugarExcursion, plazasDisponibles));
-                    mostrarMensaje("Excursión registrada exitosamente.");
+                    System.out.print("Nombre excursión: "); String ne = scanner.nextLine();
+                    System.out.print("Lugar: "); String lu = scanner.nextLine();
+                    Date fe = new Date();
+                    System.out.print("Plazas: "); int pl = Integer.parseInt(scanner.nextLine());
+                    ctrl.getControladorExcursion().registrarExcursion(new Excursion(ne, fe, lu, pl));
+                    System.out.println("Excursión registrada.");
                     break;
                 case "3":
-                    // Inscribir socio en excursión
-                    try {
-                        int idSocio = Integer.parseInt(leerEntrada("Ingrese el ID del socio: "));
-                        int idExcursionInscripcion = Integer.parseInt(leerEntrada("Ingrese el ID de la excursión: "));
-                        controlador.getControladorInscripcion().inscribirSocio(idSocio, idExcursionInscripcion);
-                        mostrarMensaje("Socio inscrito en la excursión.");
-                    } catch (SocioNoEncontradoException e) {
-                        mostrarMensaje("Error: " + e.getMessage());
-                    } catch (ExcursionNoEncontradaException e) {
-                        mostrarMensaje("Error: " + e.getMessage());
-                    } catch (PlazasInsuficientesException e) {
-                        mostrarMensaje("Error: " + e.getMessage());
-                    } catch (InscripcionDuplicadaException e) {
-                        mostrarMensaje("Error: " + e.getMessage());
-                    } catch (NumberFormatException e) {
-                        mostrarMensaje("Por favor, ingrese un número válido.");
-                    }
+                    System.out.print("ID Socio: "); int is = Integer.parseInt(scanner.nextLine());
+                    System.out.print("ID Excursión: "); int ie = Integer.parseInt(scanner.nextLine());
+                    ctrl.getControladorInscripcion().inscribir(is, ie);
+                    System.out.println("Inscripción completada.");
                     break;
                 case "4":
-                    // Mostrar lista de socios
-                    controlador.getControladorSocio().obtenerSocios().forEach(socio -> mostrarMensaje(socio.toString()));
+                    ctrl.getControladorSocio().obtenerSocios().forEach(System.out::println);
                     break;
-                case "5":
-                    continuar = false;
-                    mostrarMensaje("Saliendo...");
-                    break;
-                default:
-                    mostrarMensaje("Opción no válida.");
+                case "5": salir = true; break;
+                default: System.out.println("Opción inválida.");
             }
         }
     }
-
 }

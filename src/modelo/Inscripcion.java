@@ -3,29 +3,28 @@ package modelo;
 import java.util.Date;
 
 public class Inscripcion {
-    private Socio socio;
-    private Excursion excursion;
+    private int idInscripcion;
+    private int idSocio;
+    private int idExcursion;
     private Date fechaInscripcion;
 
-    public Inscripcion(Socio socio, Excursion excursion, Date fechaInscripcion) {
-        this.socio = socio;
-        this.excursion = excursion;
+    public Inscripcion(int idSocio, int idExcursion, Date fechaInscripcion) {
+        this.idSocio = idSocio;
+        this.idExcursion = idExcursion;
         this.fechaInscripcion = fechaInscripcion;
     }
 
-    public Date getFechaInscripcion() {
-        return fechaInscripcion;
-    }
-
-    public void setFechaInscripcion(Date fechaInscripcion) {
+    public Inscripcion(int idInscripcion, int idSocio, int idExcursion, Date fechaInscripcion) {
+        this.idInscripcion = idInscripcion;
+        this.idSocio = idSocio;
+        this.idExcursion = idExcursion;
         this.fechaInscripcion = fechaInscripcion;
     }
 
-    public Socio getSocio() {
-        return socio;
-    }
+    public int getIdInscripcion() { return idInscripcion; }
+    public int getIdSocio() { return idSocio; }
+    public int getIdExcursion() { return idExcursion; }
+    public Date getFechaInscripcion() { return fechaInscripcion; }
 
-    public Excursion getExcursion() {
-        return excursion;
-    }
+    public void setFechaInscripcion(Date fechaInscripcion) { this.fechaInscripcion = fechaInscripcion; }
 }

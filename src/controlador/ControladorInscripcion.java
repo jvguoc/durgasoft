@@ -1,60 +1,39 @@
 package controlador;
 
-import modelo.Excursion;
+import dao.InscripcionDAO;
 import modelo.Inscripcion;
-import modelo.Socio;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Date;
 
 public class ControladorInscripcion {
-    private List<Inscripcion> listaInscripciones = new ArrayList<>();
-    private ControladorSocio controladorSocio;
-    private ControladorExcursion controladorExcursion;
+    private InscripcionDAO inscripcionDAO;
+    private ControladorSocio cs;
+    private ControladorExcursion ce;
+    private Connection conn;
 
-    public ControladorInscripcion(ControladorSocio cs, ControladorExcursion ce) {
-        this.controladorSocio = cs;
-        this.controladorExcursion = ce;
+    public ControladorInscripcion(ControladorSocio cs, ControladorExcursion ce, Connection conn) throws SQLException {
+        this.cs = cs;
+        this.ce = ce;
+        this.conn = conn;
+        this.inscripcionDAO = new InscripcionDAO(conn);
     }
 
-    public void inscribirSocio(int idSocio, int idExcursion) throws SocioNoEncontradoException, ExcursionNoEncontradaException, PlazasInsuficientesException, InscripcionDuplicadaException {
-        Socio socio = controladorSocio.buscarSocioPorId(idSocio);
-        Excursion excursion = controladorExcursion.buscarExcursionPorId(idExcursion);
-
-        if (socio == null) throw new SocioNoEncontradoException("Socio no encontrado.");
-        if (excursion == null) throw new ExcursionNoEncontradaException("Excursión no encontrada.");
-        if (excursion.getPlazasDisponibles() <= 0) throw new PlazasInsuficientesException("No hay plazas disponibles.");
-        if (excursion.getSociosInscritos().contains(idSocio)) throw new InscripcionDuplicadaException("El socio ya está inscrito en la excursión.");
-
-        excursion.getSociosInscritos().add(idSocio);
-        excursion.setPlazasDisponibles(excursion.getPlazasDisponibles() - 1);
-        listaInscripciones.add(new Inscripcion(socio, excursion, new Date()));
-    }
-
-    public void eliminarInscripcion(int idSocio, int idExcursion) {
-        Inscripcion inscripcionAEliminar = null;
-
-        for (Inscripcion inscripcion : listaInscripciones) {
-            if (inscripcion.getSocio().getIdSocio() == idSocio &&
-                    inscripcion.getExcursion().getIdExcursion() == idExcursion) {
-                inscripcionAEliminar = inscripcion;
-                break;
-            }
+    public void inscribir(int idSocio, int idExcursion) throws Exception {
+        try {
+            conn.setAutoCommit(false);
+            modelo.Socio socio = cs.buscarSocioPorId(idSocio);
+            modelo.Excursion excursion = ce.buscarExcursionPorId(idExcursion);
+            if (excursion.getPlazasDisponibles() <= 0) throw new Exception("Sin plazas disponibles");
+            excursion.setPlazasDisponibles(excursion.getPlazasDisponibles() - 1);
+            ce.actualizarExcursion(excursion);
+            inscripcionDAO.crear(new Inscripcion(idSocio, idExcursion, new Date()));
+            conn.commit();
+        } catch (Exception e) {
+            conn.rollback();
+            throw e;
+        } finally {
+            conn.setAutoCommit(true);
         }
-
-        if (inscripcionAEliminar != null) {
-            Excursion excursion = controladorExcursion.buscarExcursionPorId(idExcursion);
-            if (excursion != null) {
-                excursion.setPlazasDisponibles(excursion.getPlazasDisponibles() + 1);
-            }
-
-            listaInscripciones.remove(inscripcionAEliminar);
-        }
-    }
-
-    public boolean estaInscrito(int idSocio, int idExcursion) {
-        Excursion excursion = controladorExcursion.buscarExcursionPorId(idExcursion);
-        return excursion != null && excursion.getSociosInscritos().contains(idSocio);
     }
 }

@@ -1,79 +1,51 @@
 package modelo;
 
-import java.text.SimpleDateFormat; // Temporal hasta encontrar la mejor forma de handlear la fecha
 import java.util.Date;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.ArrayList;
 
 public class Excursion {
     private int idExcursion;
-    private static int contadorId = 1;
     private String nombre;
     private Date fecha;
     private String lugar;
     private int plazasDisponibles;
-    private List<Integer> sociosInscritos = new ArrayList<>(); // Lista de socios inscritos
+    private List<Integer> sociosInscritos = new ArrayList<>();
 
-    public Excursion(int idExcursion, String nombre, Date fecha, String lugar, int plazasDisponibles) {
-        this.idExcursion = contadorId++;
+    public Excursion(String nombre, Date fecha, String lugar, int plazasDisponibles) {
         this.nombre = nombre;
         this.fecha = fecha;
         this.lugar = lugar;
         this.plazasDisponibles = plazasDisponibles;
+    }
+
+    public Excursion(int idExcursion, String nombre, Date fecha, String lugar, int plazasDisponibles) {
+        this.idExcursion = idExcursion;
+        this.nombre = nombre;
+        this.fecha = fecha;
+        this.lugar = lugar;
+        this.plazasDisponibles = plazasDisponibles;
+    }
+
+    public int getIdExcursion() { return idExcursion; }
+    public String getNombre() { return nombre; }
+    public Date getFecha() { return fecha; }
+    public String getLugar() { return lugar; }
+    public int getPlazasDisponibles() { return plazasDisponibles; }
+    public List<Integer> getSociosInscritos() { return sociosInscritos; }
+
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public void setFecha(Date fecha) { this.fecha = fecha; }
+    public void setLugar(String lugar) { this.lugar = lugar; }
+    public void setPlazasDisponibles(int plazasDisponibles) { this.plazasDisponibles = plazasDisponibles; }
+
+    public String getFechaFormateada() {
+        return new SimpleDateFormat("dd/MM/yyyy").format(fecha);
     }
 
     @Override
     public String toString() {
-        return "ID: " + idExcursion +
-                ", Nombre: " + nombre +
-                ", Fecha: " + getFechaFormateada() +
-                ", Lugar: " + lugar +
-                ", Plazas disponibles: " + plazasDisponibles;
-    }
-
-    public int getIdExcursion() {
-        return idExcursion;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
-    public String getFechaFormateada() {
-        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-        return formato.format(fecha);
-    }
-
-    public String getLugar() {
-        return lugar;
-    }
-
-    public void setLugar(String lugar) {
-        this.lugar = lugar;
-    }
-
-    public int getPlazasDisponibles() {
-        return plazasDisponibles;
-    }
-
-    public void setPlazasDisponibles(int plazasDisponibles) {
-        this.plazasDisponibles = plazasDisponibles;
-    }
-
-    // Nuevo método para obtener la lista de socios inscritos
-    public List<Integer> getSociosInscritos() {
-        return sociosInscritos;
+        return "ID: " + idExcursion + ", Nombre: " + nombre + ", Fecha: " + getFechaFormateada() + ", Lugar: " + lugar + ", Plazas disponibles: " + plazasDisponibles;
     }
 }
