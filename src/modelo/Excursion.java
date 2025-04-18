@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Excursion {
-    private final int idExcursion; // TODO: Revisar si por lógica debería ser final o interesa cambiar la id en algún punto
+    private int idExcursion;
     private static int contadorId = 1;
     private String nombre;
     private Date fecha;
@@ -20,22 +20,6 @@ public class Excursion {
         this.fecha = fecha;
         this.lugar = lugar;
         this.plazasDisponibles = plazasDisponibles;
-    }
-
-    public void crear() {
-        System.out.println("Creando excursión: " + this.nombre);
-    }
-
-    public void modificar(String nuevoNombre, Date nuevaFecha, String nuevoLugar, int nuevasPlazas) {
-        this.nombre = nuevoNombre;
-        this.fecha = nuevaFecha;
-        this.lugar = nuevoLugar;
-        this.plazasDisponibles = nuevasPlazas;
-        System.out.println("Datos de la excursión actualizados.");
-    }
-
-    public void eliminar() {
-        System.out.println("Eliminando excursión: " + this.nombre);
     }
 
     @Override
@@ -55,17 +39,37 @@ public class Excursion {
         return nombre;
     }
 
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
+    public String getFechaFormateada() {
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        return formato.format(fecha);
+    }
+
+    public String getLugar() {
+        return lugar;
+    }
+
+    public void setLugar(String lugar) {
+        this.lugar = lugar;
+    }
+
     public int getPlazasDisponibles() {
         return plazasDisponibles;
     }
 
     public void setPlazasDisponibles(int plazasDisponibles) {
         this.plazasDisponibles = plazasDisponibles;
-    }
-
-    public String getFechaFormateada() {
-        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-        return formato.format(fecha);
     }
 
     // Nuevo método para obtener la lista de socios inscritos
