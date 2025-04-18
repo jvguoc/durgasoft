@@ -9,6 +9,7 @@ public class SocioDAO implements DAO<Socio> {
     private Connection connection;
     public SocioDAO(Connection connection) { this.connection = connection; }
 
+    //  https://www.baeldung.com/java-dao-pattern
     @Override
     public void crear(Socio socio) throws SQLException {
         try (CallableStatement cs = connection.prepareCall("{CALL sp_insert_socio(?, ?, ?)}")) {

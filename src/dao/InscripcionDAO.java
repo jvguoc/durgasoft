@@ -7,27 +7,36 @@ import java.util.List;
 
 public class InscripcionDAO implements DAO<Inscripcion> {
     private Connection connection;
-    public InscripcionDAO(Connection connection) { this.connection = connection; }
+
+    public InscripcionDAO(Connection connection) {
+        this.connection = connection;
+    }
 
     @Override
     public void crear(Inscripcion inscripcion) throws SQLException {
-        try (CallableStatement cs = connection.prepareCall("{CALL sp_insert_inscripcion(?, ?, ?)}")) {
-            cs.setInt(1, inscripcion.getIdSocio());
-            cs.setInt(2, inscripcion.getIdExcursion());
-            long tiempo = inscripcion.getFechaInscripcion().getTime();
-            java.sql.Date fechaSQL = new java.sql.Date(tiempo);
-            cs.setDate(3, fechaSQL);
-            cs.executeUpdate();
+        String sql = "INSERT INTO inscripcion (id_socio, id_excursion, fecha_inscripcion) VALUES (?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, inscripcion.getIdSocio());
+            ps.setInt(2, inscripcion.getIdExcursion());
+            ps.setDate(3, new java.sql.Date(inscripcion.getFechaInscripcion().getTime()));
+            ps.executeUpdate();
         }
     }
 
     @Override
     public Inscripcion obtenerPorId(int id) throws SQLException {
-        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM inscripcion WHERE id_inscripcion = ?")) {
+        String sql = "SELECT * FROM inscripcion WHERE id_inscripcion = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return new Inscripcion(rs.getInt("id_inscripcion"), rs.getInt("id_socio"), rs.getInt("id_excursion"), rs.getDate("fecha_inscripcion"));
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Inscripcion(
+                            rs.getInt("id_inscripcion"),
+                            rs.getInt("id_socio"),
+                            rs.getInt("id_excursion"),
+                            rs.getDate("fecha_inscripcion")
+                    );
+                }
             }
         }
         return null;
@@ -35,10 +44,17 @@ public class InscripcionDAO implements DAO<Inscripcion> {
 
     @Override
     public List<Inscripcion> obtenerTodos() throws SQLException {
+        String sql = "SELECT * FROM inscripcion";
         List<Inscripcion> lista = new ArrayList<>();
-        try (Statement st = connection.createStatement(); ResultSet rs = st.executeQuery("SELECT * FROM inscripcion")) {
+        try (Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
             while (rs.next()) {
-                lista.add(new Inscripcion(rs.getInt("id_inscripcion"), rs.getInt("id_socio"), rs.getInt("id_excursion"), rs.getDate("fecha_inscripcion")));
+                lista.add(new Inscripcion(
+                        rs.getInt("id_inscripcion"),
+                        rs.getInt("id_socio"),
+                        rs.getInt("id_excursion"),
+                        rs.getDate("fecha_inscripcion")
+                ));
             }
         }
         return lista;
@@ -46,22 +62,33 @@ public class InscripcionDAO implements DAO<Inscripcion> {
 
     @Override
     public void actualizar(Inscripcion inscripcion) throws SQLException {
-        try (CallableStatement cs = connection.prepareCall("{CALL sp_update_inscripcion(?, ?, ?, ?)}")) {
-            cs.setInt(1, inscripcion.getIdInscripcion());
-            cs.setInt(2, inscripcion.getIdSocio());
-            cs.setInt(3, inscripcion.getIdExcursion());
-            long tiempo = inscripcion.getFechaInscripcion().getTime();
-            java.sql.Date fechaSQL = new java.sql.Date(tiempo);
-            cs.setDate(4, fechaSQL);
-            cs.executeUpdate();
+        String sql = "UPDATE inscripcion SET id_socio = ?, id_excursion = ?, fecha_inscripcion = ? WHERE id_inscripcion = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, inscripcion.getIdSocio());
+            ps.setInt(2, inscripcion.getIdExcursion());
+            ps.setDate(3, new java.sql.Date(inscripcion.getFechaInscripcion().getTime()));
+            ps.setInt(4, inscripcion.getIdInscripcion());
+            ps.executeUpdate();
         }
     }
 
     @Override
     public void eliminar(int id) throws SQLException {
-        try (CallableStatement cs = connection.prepareCall("{CALL sp_delete_inscripcion(?)}")) {
-            cs.setInt(1, id);
-            cs.executeUpdate();
+        String sql = "DELETE FROM inscripcion WHERE id_inscripcion = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        }
+    }
+
+    /**
+     * Elimina todas las inscripciones asociadas a una excursión.
+     */
+    public void eliminarPorExcursion(int idExcursion) throws SQLException {
+        String sql = "DELETE FROM inscripcion WHERE id_excursion = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, idExcursion);
+            ps.executeUpdate();
         }
     }
 }
