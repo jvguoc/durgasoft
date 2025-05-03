@@ -1,34 +1,15 @@
 package controlador;
 
-import dao.SocioDAO;
+import dao.DAO;
+import dao.DAOFactory;
 import modelo.Socio;
-import java.sql.SQLException;
 import java.util.List;
 
 public class ControladorSocio {
-    private SocioDAO socioDAO;
-
-    public ControladorSocio() throws SQLException {
-        this.socioDAO = dao.DAOFactory.createSocioDAO();
-    }
-
-    public void registrarSocio(Socio socio) throws SQLException {
-        socioDAO.crear(socio);
-    }
-
-    public List<Socio> obtenerSocios() throws SQLException {
-        return socioDAO.obtenerTodos();
-    }
-
-    public Socio buscarSocioPorId(int id) throws SQLException {
-        return socioDAO.obtenerPorId(id);
-    }
-
-    public void modificarSocio(Socio socio) throws SQLException {
-        socioDAO.actualizar(socio);
-    }
-
-    public void eliminarSocio(int id) throws SQLException {
-        socioDAO.eliminar(id);
-    }
+    private DAO<Socio> dao = DAOFactory.getSocioDAO();
+    public void registrarSocio(Socio s) { dao.create(s); }
+    public List<Socio> obtenerSocios() { return dao.findAll(); }
+    public Socio buscarSocioPorId(int id) { return dao.findById(id); }
+    public void modificarSocio(Socio s) { dao.update(s); }
+    public void eliminarSocio(int id) { dao.delete(id); }
 }

@@ -1,15 +1,17 @@
 package dao;
 
-import java.sql.SQLException;
+import modelo.Socio;
+import modelo.Excursion;
+import modelo.Inscripcion;
 
 public class DAOFactory {
-    public static SocioDAO createSocioDAO() throws SQLException {
-        return new SocioDAO(Conexion.getConnection());
+    public static DAO<Socio> getSocioDAO() {
+        return new SocioDAOJPA();
     }
-    public static ExcursionDAO createExcursionDAO() throws SQLException {
-        return new ExcursionDAO(Conexion.getConnection());
+    public static DAO<Excursion> getExcursionDAO() {
+        return new ExcursionDAOJPA();
     }
-    public static InscripcionDAO createInscripcionDAO() throws SQLException {
-        return new InscripcionDAO(Conexion.getConnection());
+    public static DAO<Inscripcion> getInscripcionDAO() {
+        return new InscripcionDAOJPA();
     }
 }

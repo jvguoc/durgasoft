@@ -1,30 +1,45 @@
 package modelo;
 
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "inscripcion")
 public class Inscripcion {
-    private int idInscripcion;
-    private int idSocio;
-    private int idExcursion;
+    @Override
+    public String toString() {
+        return "ID Inscripción: " + idInscripcion +
+                ", Socio: " + socio.getIdSocio() +
+                ", Excursión: " + excursion.getIdExcursion() +
+                ", Fecha: " + fechaInscripcion;
+    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_inscripcion")
+    private Integer idInscripcion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_socio", nullable = false)
+    private Socio socio;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_excursion", nullable = false)
+    private Excursion excursion;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "fecha_inscripcion", nullable = false)
     private Date fechaInscripcion;
 
-    public Inscripcion(int idSocio, int idExcursion, Date fechaInscripcion) {
-        this.idSocio = idSocio;
-        this.idExcursion = idExcursion;
+    public Inscripcion() {}
+
+    public Inscripcion(Socio socio, Excursion excursion, Date fechaInscripcion) {
+        this.socio = socio;
+        this.excursion = excursion;
         this.fechaInscripcion = fechaInscripcion;
     }
 
-    public Inscripcion(int idInscripcion, int idSocio, int idExcursion, Date fechaInscripcion) {
-        this.idInscripcion = idInscripcion;
-        this.idSocio = idSocio;
-        this.idExcursion = idExcursion;
-        this.fechaInscripcion = fechaInscripcion;
-    }
-
-    public int getIdInscripcion() { return idInscripcion; }
-    public int getIdSocio() { return idSocio; }
-    public int getIdExcursion() { return idExcursion; }
+    public Integer getIdInscripcion() { return idInscripcion; }
+    public Socio getSocio() { return socio; }
+    public Excursion getExcursion() { return excursion; }
     public Date getFechaInscripcion() { return fechaInscripcion; }
-
-    public void setFechaInscripcion(Date fechaInscripcion) { this.fechaInscripcion = fechaInscripcion; }
 }

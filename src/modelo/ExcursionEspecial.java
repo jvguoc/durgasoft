@@ -1,3 +1,4 @@
+/*
 package modelo;
 
 import java.util.Date;
@@ -23,3 +24,5 @@ public class ExcursionEspecial extends Excursion {
         return super.toString() + ", Tipo de Evento: " + tipo;
     }
 }
+
+ */

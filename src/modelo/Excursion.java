@@ -1,17 +1,41 @@
 package modelo;
 
+import javax.persistence.*;
 import java.util.Date;
-import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
+@Entity
+@Table(name = "excursion")
 public class Excursion {
-    private int idExcursion;
+    @Override
+    public String toString() {
+        return "ID: " + idExcursion + ", Nombre: " + nombre +
+                ", Lugar: " + lugar + ", Fecha: " + fecha +
+                ", Plazas disponibles: " + plazasDisponibles;
+    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_excursion")
+    private Integer idExcursion;
+
+    @Column(nullable = false)
     private String nombre;
-    private Date fecha;
+
+    @Column(nullable = false)
     private String lugar;
+
+    @Temporal(TemporalType.DATE)
+    @Column(nullable = false)
+    private Date fecha;
+
+    @Column(name = "plazas_disponibles", nullable = false)
     private int plazasDisponibles;
-    private List<Integer> sociosInscritos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "excursion", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Inscripcion> inscripciones = new ArrayList<>();
+
+    public Excursion() {}
 
     public Excursion(String nombre, Date fecha, String lugar, int plazasDisponibles) {
         this.nombre = nombre;
@@ -20,32 +44,14 @@ public class Excursion {
         this.plazasDisponibles = plazasDisponibles;
     }
 
-    public Excursion(int idExcursion, String nombre, Date fecha, String lugar, int plazasDisponibles) {
-        this.idExcursion = idExcursion;
-        this.nombre = nombre;
-        this.fecha = fecha;
-        this.lugar = lugar;
-        this.plazasDisponibles = plazasDisponibles;
-    }
-
-    public int getIdExcursion() { return idExcursion; }
+    public Integer getIdExcursion() { return idExcursion; }
     public String getNombre() { return nombre; }
-    public Date getFecha() { return fecha; }
-    public String getLugar() { return lugar; }
-    public int getPlazasDisponibles() { return plazasDisponibles; }
-    public List<Integer> getSociosInscritos() { return sociosInscritos; }
-
     public void setNombre(String nombre) { this.nombre = nombre; }
-    public void setFecha(Date fecha) { this.fecha = fecha; }
+    public String getLugar() { return lugar; }
     public void setLugar(String lugar) { this.lugar = lugar; }
+    public Date getFecha() { return fecha; }
+    public void setFecha(Date fecha) { this.fecha = fecha; }
+    public int getPlazasDisponibles() { return plazasDisponibles; }
     public void setPlazasDisponibles(int plazasDisponibles) { this.plazasDisponibles = plazasDisponibles; }
-
-    public String getFechaFormateada() {
-        return new SimpleDateFormat("dd/MM/yyyy").format(fecha);
-    }
-
-    @Override
-    public String toString() {
-        return "ID: " + idExcursion + ", Nombre: " + nombre + ", Fecha: " + getFechaFormateada() + ", Lugar: " + lugar + ", Plazas disponibles: " + plazasDisponibles;
-    }
+    public List<Inscripcion> getInscripciones() { return inscripciones; }
 }

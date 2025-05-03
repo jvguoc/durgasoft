@@ -6,8 +6,8 @@ public class Main {
         try {
             ControladorPrincipal ctrl = new ControladorPrincipal();
             new VistaConsola().iniciarMenu(ctrl);
-        } catch (Exception e) {
-            e.printStackTrace(); //TODO: Actualizar si hay tiempo
+        } catch(Exception e) {
+            e.printStackTrace();
         }
     }
 }
