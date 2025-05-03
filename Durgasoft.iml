@@ -33,5 +33,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="hibernate.core" level="project" />
+    <orderEntry type="library" name="javax.persistence.api" level="project" />
   </component>
 </module>
