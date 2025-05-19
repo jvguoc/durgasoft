@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="vista.VistaExcursionControlador">
+    <top>
+        <ToolBar>
+            <Button text="Registrar Excursión" onAction="#alRegistrarExcursion"/>
+            <Button text="Modificar Excursión" onAction="#alModificarExcursion"/>
+            <Button text="Eliminar Excursión" onAction="#alEliminarExcursion"/>
+        </ToolBar>
+    </top>
+    <center>
+        <TableView fx:id="tablaExcursiones">
+            <columns>
+                <TableColumn fx:id="colId" text="ID"/>
+                <TableColumn fx:id="colNombre" text="Nombre"/>
+                <TableColumn fx:id="colLugar" text="Lugar"/>
+                <TableColumn fx:id="colFecha" text="Fecha"/>
+                <TableColumn fx:id="colPlazas" text="Plazas"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

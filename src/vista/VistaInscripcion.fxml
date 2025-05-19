@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="vista.VistaInscripcionControlador">
+    <top>
+        <ToolBar>
+            <Button text="Registrar Inscripción" onAction="#alRegistrarInscripcion"/>
+            <Button text="Eliminar Inscripción" onAction="#alEliminarInscripcion"/>
+        </ToolBar>
+    </top>
+    <center>
+        <TableView fx:id="tablaInscripciones">
+            <columns>
+                <TableColumn fx:id="colId" text="ID"/>
+                <TableColumn fx:id="colSocio" text="ID Socio"/>
+                <TableColumn fx:id="colExcursion" text="ID Excursión"/>
+                <TableColumn fx:id="colFecha" text="Fecha"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

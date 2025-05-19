@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="vista.VistaSocioControlador">
+    <top>
+        <ToolBar>
+            <Button text="Registrar Socio" onAction="#alRegistrarSocio"/>
+            <Button text="Modificar Socio" onAction="#alModificarSocio"/>
+            <Button text="Eliminar Socio" onAction="#alEliminarSocio"/>
+        </ToolBar>
+    </top>
+    <center>
+        <TableView fx:id="tablaSocios">
+            <columns>
+                <TableColumn fx:id="colId" text="ID"/>
+                <TableColumn fx:id="colNombre" text="Nombre"/>
+                <TableColumn fx:id="colLocalidad" text="Localidad"/>
+                <TableColumn fx:id="colTelefono" text="Teléfono"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>
